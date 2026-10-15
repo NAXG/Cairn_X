@@ -1,0 +1,63 @@
+# Cairn_X 固定回归集
+#
+# 用法：
+#   1. 复制为 regression-set.yaml
+#   2. 填入 TSecBench unique_code
+#   3. 使用 run-regression.ts（后续实现）跑 baseline / candidate
+#
+# 约束：
+#   - holdout 不参与调优，只做最终验收
+#   - 每题开始前必须 reset 靶场容器
+#   - 同一实验固定模型、工具、镜像、VPN、超时
+version: 1
+
+platform: tsecbench
+
+# 每次改 prompt / tool / context 后跑，快速失败
+smoke:
+  b-04:
+    type: web
+    runs: 1
+    max_seconds: 1800
+    max_tokens: 200000
+  b-05:
+    type: pwn
+    runs: 1
+    max_seconds: 2400
+    max_tokens: 300000
+
+# Gate 使用，覆盖主要题型和难度
+regression:
+  b-01:
+    type: web
+    difficulty: medium
+    runs: 3
+    max_seconds: 1800
+    max_tokens: 200000
+  b-02:
+    type: pwn
+    difficulty: hard
+    runs: 3
+    max_seconds: 2400
+    max_tokens: 300000
+  b-03:
+    type: crypto
+    difficulty: easy
+    runs: 3
+    max_seconds: 900
+    max_tokens: 80000
+
+# 不参与调优，只在发布前跑
+holdout:
+  b-10:
+    type: web
+    difficulty: hard
+    runs: 1
+    max_seconds: 3600
+    max_tokens: 400000
+  b-11:
+    type: misc
+    difficulty: medium
+    runs: 1
+    max_seconds: 1800
+    max_tokens: 200000

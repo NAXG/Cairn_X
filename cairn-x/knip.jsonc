@@ -1,0 +1,10 @@
+{
+  // Dockerfile.cairn-x starts this worker directly, outside the CLI import graph.
+  "entry": ["src/worker/main.ts!"],
+  // bashsession.ts loads this required native dependency using a runtime specifier.
+  "ignoreDependencies": ["node-pty"],
+  // Both routes use these semantic names for the same evidence validation schema.
+  "ignoreIssues": {
+    "src/server/models.ts": ["duplicates"],
+  },
+}

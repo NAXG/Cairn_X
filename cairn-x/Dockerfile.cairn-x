@@ -1,0 +1,139 @@
+# Cairn_X Worker 镜像 —— 基于 Kali 的 Executor Worker 沙箱。
+#
+# 一个 active 项目对应一个常驻容器；Worker 用项目令牌领取 queued execution，
+# 控制端在领取时签发本次执行的短期令牌，容器退出代表项目 Worker 停止。
+# 容器内没有 Docker CLI / Docker Socket，也不注入长期凭据。
+#
+# 构建（仓库根目录）：
+#   docker build -f cairn-x/Dockerfile.cairn-x -t cairn-x-worker:latest .
+#
+# 仅可将此镜像用于你有权测试的目标。
+
+# 不写死 --platform：Worker 容器跑在与宿主同架构的镜像上性能最好，跨架构
+# （Apple Silicon 上跑 amd64）需要模拟层，渗透工具会明显变慢。构建时 Docker 会
+# 按宿主架构拉取基础镜像；若某个 tag 确实没有 arm64 manifest，构建会直接失败
+# 并给出 "no matching manifest" —— 那时再显式加回 --platform=amd64（并确保已
+# 开启 Rosetta / QEMU 模拟），依赖的 Node 二进制会自动跟随 TARGETARCH。
+FROM kalilinux/kali-last-release:latest
+
+ARG KALI_MIRROR=http://mirrors.tuna.tsinghua.edu.cn/kali
+ARG NODE_VERSION=24.13.0
+ARG TARGETARCH
+
+# 保留 Worker 常用的基础网络/系统工具，并预装逆向与运行时调试工具；其他 Kali 工具按任务需要安装。
+RUN rm -f /etc/apt/sources.list.d/*.sources && \
+    echo "deb ${KALI_MIRROR} kali-last-snapshot main contrib non-free non-free-firmware" \
+        > /etc/apt/sources.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        wget \
+        git \
+        xz-utils \
+        build-essential \
+        python3 \
+        python3-pip \
+        nmap \
+        netcat-openbsd \
+        openssh-client \
+        dnsutils \
+        iproute2 \
+        net-tools \
+        tmux \
+        procps \
+        gdb \
+        gdb-multiarch \
+        strace \
+        ltrace \
+        xxd \
+        file \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── 渗透工具层（隔离网络预装）──────────────────────────────
+# 隔离网络（如 TSecBench VPN 靶场）里容器无法访问 apt/pip 镜像，常用
+# 渗透工具与字典必须在构建时装入。全部为无 UI 的 CLI：Execute 经 bash
+# 工具调用，模型直接读 stdout；交互式工具需非交互参数（如 sqlmap --batch、
+# responder -A、evil-winrm -c）。Burp/Nessus 一类 GUI 工具不进沙箱。
+# 关闭获得轻量镜像：docker build --build-arg PENTEST_TOOLS=0 ...
+# metasploit-framework / wpscan 未列入：体积大或需外部 token，按需再开。
+# 注意：impacket 工具在 Kali 新版中位于 /usr/bin/impacket-*（61 个，如
+# impacket-secretsdump / impacket-psexec），不再是旧版 psexec.py 等裸文件名；
+# 模型按 impacket- 前缀调用，否则会 "command not found"。
+# ProjectDiscovery 的 httpx 在 Kali 里叫 httpx-toolkit（裸名 httpx 属于 python3-httpx）。
+ARG PENTEST_TOOLS=1
+RUN if [ "$PENTEST_TOOLS" = "1" ]; then \
+        apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            nuclei \
+            ffuf \
+            httpx-toolkit \
+            whatweb \
+            sqlmap \
+            testssl.sh \
+            jq \
+            seclists \
+            wordlists \
+            exploitdb \
+            impacket-scripts \
+            netexec \
+            responder \
+            evil-winrm \
+            enum4linux-ng \
+            smbclient \
+            nbtscan \
+            snmp \
+            onesixtyone \
+            proxychains4 \
+            john \
+            hydra \
+            hashid \
+            tcpdump \
+            socat \
+            rlwrap \
+        && gunzip -kf /usr/share/wordlists/rockyou.txt.gz \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+# nuclei 的漏洞模板不随 Kali 包安装，首次扫描默认联网下载到
+# ~/.local/nuclei-templates。隔离靶场内联不上网时 nuclei 会直接报
+# "no templates provided for scan" 而完全不能用，因此构建期（有网）预取，
+# 让镜像自包含。模板是扫描必需数据，不是可选项。
+RUN if [ "$PENTEST_TOOLS" = "1" ]; then \
+        nuclei -update-templates 2>&1 | tail -3 \
+        && test -d /root/.local/nuclei-templates \
+        && echo "nuclei templates: $(find /root/.local/nuclei-templates -name '*.yaml' | wc -l) yaml files"; \
+    fi
+
+# Kali 镜像不自带 Node；按目标架构取官方二进制（arm64 宿主原先会因写死 x64 失败）。
+RUN case "${TARGETARCH:-amd64}" in \
+        amd64) NODE_ARCH=x64 ;; \
+        arm64) NODE_ARCH=arm64 ;; \
+        *) echo "unsupported TARGETARCH: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl -fsSL \
+        "https://mirrors.aliyun.com/nodejs-release/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz" \
+        | tar -xJ --strip-components=1 -C /usr/local \
+    && node --version \
+    && npm --version
+
+WORKDIR /app
+
+COPY cairn-x/package.json cairn-x/package-lock.json ./
+# npm 会默认安装 esbuild 的平台可选二进制；保留它们，避免清理目录时
+# 误删当前平台包内部的 bin/esbuild。
+RUN npm ci --omit=dev \
+    && npm cache clean --force \
+    && rm -rf /root/.cache /tmp/*
+
+COPY cairn-x/src ./src
+COPY cairn-x/tsconfig.json ./
+
+# 项目常驻工作区：每个执行使用 /workspace/steps/<execution_id>，
+# /workspace/persist 在同一项目的步骤之间共享；容器重建后本地文件不保证保留。
+WORKDIR /workspace
+
+# 控制端注入项目 Worker 凭据：CAIRN_CONTROL_URL / CAIRN_PROJECT_ID /
+# CAIRN_PROJECT_TOKEN / CAIRN_PROJECT_CONCURRENCY；每次 next() 再取得执行令牌。
+CMD ["/app/node_modules/.bin/tsx", "/app/src/worker/main.ts"]

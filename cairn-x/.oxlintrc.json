@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "rules": {
+    // 本仓库多处需要「先快照再遍历」：循环体内部会从同一 Set/Map 删除元素，
+    // `[...this.tasks]` 这类展开是刻意的，去掉会漏遍历。故关闭该规则。
+    "unicorn/no-useless-spread": "off",
+    // `{ ...(x ?? {}) }` 在本仓库是纯风格写法，不构成缺陷。
+    "unicorn/no-useless-fallback-in-spread": "off"
+  }
+}

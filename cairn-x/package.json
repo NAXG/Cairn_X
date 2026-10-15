@@ -1,0 +1,91 @@
+{
+  "name": "cairn-x",
+  "version": "0.0.2",
+  "private": true,
+  "license": "MIT",
+  "description": "FGS 图驱动的通用问题求解引擎：给定起点与目标，在未知状态空间中搜索路径。",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NAXG/Cairn_X.git",
+    "directory": "cairn-x"
+  },
+  "homepage": "https://github.com/NAXG/Cairn_X#readme",
+  "bugs": "https://github.com/NAXG/Cairn_X/issues",
+  "author": "NAXG",
+  "keywords": [
+    "ai-agent",
+    "autonomous-agents",
+    "state-space-search",
+    "penetration-testing",
+    "llm"
+  ],
+  "type": "module",
+  "packageManager": "npm@11.19.0",
+  "engines": {
+    "node": ">=22.19"
+  },
+  "bin": {
+    "cairn-x": "src/cli.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "oxlint src tests scripts",
+    "typecheck": "tsc --noEmit && npm run typecheck:web",
+    "cli": "tsx src/cli.ts",
+    "dev": "tsx src/cli.ts dev",
+    "dev:web": "vite --config vite.config.ts",
+    "build:web": "vite build --config vite.config.ts",
+    "typecheck:web": "tsc -p tsconfig.web.json",
+    "pretest": "npm run build:web",
+    "digest": "tsx src/cli.ts digest",
+    "regression": "tsx src/cli.ts regression",
+    "check:deps": "node --import tsx scripts/check-deps.ts",
+    "knip": "knip",
+    "test:core-deps": "vitest run --config vitest.core.config.ts",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run check:deps && npm run knip && npm run test:core-deps"
+  },
+  "dependencies": {
+    "@earendil-works/pi-agent-core": "1.0.0",
+    "@earendil-works/pi-ai": "1.0.0",
+    "@earendil-works/pi-coding-agent": "1.0.0",
+    "@hono/node-server": "2.1.1",
+    "@xterm/headless": "^6.0.0",
+    "ajv": "8.20.0",
+    "better-sqlite3": "13.0.3",
+    "commander": "15.0.0",
+    "hono": "4.13.7",
+    "node-pty": "1.2.0-beta.15",
+    "tsx": "4.23.13",
+    "yaml": "2.9.0",
+    "zod": "4.6.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "26.4.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "cytoscape": "^3.34.3",
+    "cytoscape-dagre": "^4.0.1",
+    "knip": "^6.39.0",
+    "oxlint": "^1.86.0",
+    "prettier": "^3.9.6",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "typescript": "7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "5.0.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true,
+    "node-pty@1.2.0-beta.15": true,
+    "protobufjs@7.6.6": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.28.1": true,
+    "@google/genai@2.21.0": true
+  }
+}

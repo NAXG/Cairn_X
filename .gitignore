@@ -1,0 +1,21 @@
+.vscode/
+.DS_Store
+.playwright-cli/
+node_modules/
+datas/
+cairn-x/datas/
+dispatch.yaml
+ARTEX/
+tsecbench_sessions_12662/
+
+cairn-x/dist-web/
+cairn-x/test-results/
+cairn-x/playwright-report/
+
+# TSecBench 靶场 VPN 配置（含凭据，绝不入库）
+*.ovpn
+
+# 部署凭据（docker compose 读取；绝不入库）
+.env
+.env.*
+!.env.example

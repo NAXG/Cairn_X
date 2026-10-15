@@ -1,0 +1,232 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1774" height="887" viewBox="0 0 1774 887" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+	<defs>
+		<linearGradient id="sub2" x1="0" y1="0" x2="1" y2="0">
+			<stop offset="0" stop-color="#2f9fd0" />
+			<stop offset="0.55" stop-color="#3fd0c0" />
+			<stop offset="1" stop-color="#5ff0d8" />
+		</linearGradient>
+		<linearGradient id="tagline" x1="0" y1="0" x2="1" y2="0">
+			<stop offset="0" stop-color="#3f8f8a" />
+			<stop offset="0.5" stop-color="#4dc4b4" />
+			<stop offset="1" stop-color="#7df3de" />
+		</linearGradient>
+		<radialGradient id="ambient" cx="0.74" cy="0.24" r="0.62">
+			<stop offset="0" stop-color="#10394a" stop-opacity="0.5" />
+			<stop offset="1" stop-color="#070a10" stop-opacity="0" />
+		</radialGradient>
+		<radialGradient id="goalHalo" cx="0.5" cy="0.5" r="0.5">
+			<stop offset="0" stop-color="#22c55e" stop-opacity="0.32" />
+			<stop offset="1" stop-color="#22c55e" stop-opacity="0" />
+		</radialGradient>
+		<radialGradient id="originHalo" cx="0.5" cy="0.5" r="0.5">
+			<stop offset="0" stop-color="#38bdf8" stop-opacity="0.3" />
+			<stop offset="1" stop-color="#38bdf8" stop-opacity="0" />
+		</radialGradient>
+		<filter id="soft" x="-120%" y="-120%" width="340%" height="340%">
+			<feGaussianBlur stdDeviation="7" />
+		</filter>
+		<filter id="soft2" x="-120%" y="-120%" width="340%" height="340%">
+			<feGaussianBlur stdDeviation="3.5" />
+		</filter>
+		<!-- 节点：外发光 + 实心圆 + 亮核 -->
+		<g id="node">
+			<circle r="13" filter="url(#soft)" fill="currentColor" opacity="0.85" />
+			<circle r="12" fill="#0a0f16" />
+			<circle r="9.5" fill="currentColor" />
+			<circle r="4" fill="#ffffff" opacity="0.85" />
+		</g>
+		<g id="ghost">
+			<circle r="9" fill="#10161f" stroke="#39424f" stroke-width="3" />
+		</g>
+		<g id="hintNode">
+			<circle r="12" fill="#0a0f16" stroke="#f59e0b" stroke-width="3.5" />
+			<circle r="4" fill="#f59e0b" />
+		</g>
+		<g id="cross" stroke="#3d4655" stroke-width="5" stroke-linecap="round">
+			<line x1="-9" y1="-9" x2="9" y2="9" />
+			<line x1="9" y1="-9" x2="-9" y2="9" />
+		</g>
+	</defs>
+
+	<rect width="1774" height="887" fill="#070a10" />
+	<rect width="1774" height="887" fill="url(#ambient)" />
+
+	<!-- ================= 未知状态空间：底色网格 ================= -->
+	<g stroke="#131a24" stroke-width="1.5" opacity="0.5">
+		<line x1="812" y1="742" x2="1502" y2="122" />
+		<line x1="900" y1="716" x2="1310" y2="196" />
+		<line x1="770" y1="612" x2="1602" y2="286" />
+		<line x1="936" y1="790" x2="1636" y2="426" />
+		<line x1="828" y1="530" x2="1372" y2="82" />
+		<line x1="1010" y1="770" x2="1420" y2="640" />
+		<line x1="742" y1="690" x2="1200" y2="790" />
+		<line x1="1240" y1="800" x2="1650" y2="352" />
+		<line x1="1160" y1="128" x2="1580" y2="592" />
+		<line x1="880" y1="404" x2="1476" y2="666" />
+		<line x1="1046" y1="230" x2="1660" y2="700" />
+		<line x1="816" y1="240" x2="1024" y2="330" />
+	</g>
+	<g fill="#232c38">
+		<circle cx="868" cy="452" r="7" />
+		<circle cx="1082" cy="240" r="7" />
+		<circle cx="1216" cy="536" r="7" />
+		<circle cx="1348" cy="128" r="7" />
+		<circle cx="1452" cy="502" r="7" />
+		<circle cx="1566" cy="648" r="7" />
+		<circle cx="1294" cy="742" r="7" />
+		<circle cx="1004" cy="756" r="7" />
+		<circle cx="936" cy="336" r="7" />
+		<circle cx="1176" cy="686" r="7" />
+		<circle cx="1530" cy="470" r="7" />
+		<circle cx="844" cy="196" r="7" />
+	</g>
+
+	<!-- ================= 搜索路径 ================= -->
+	<!-- 已探索（蓝/紫）主干 -->
+	<g stroke-width="4.5" fill="none" stroke-linecap="round">
+		<path d="M820 688 L898 628" stroke="#38bdf8" opacity="0.85" />
+		<path d="M898 628 L972 570" stroke="#38bdf8" opacity="0.85" />
+		<path d="M972 570 L1046 512" stroke="#8b7cf6" opacity="0.85" />
+		<path d="M1046 512 L1116 452" stroke="#8b7cf6" opacity="0.85" />
+		<path d="M1116 452 L1186 392" stroke="#8b7cf6" opacity="0.85" />
+	</g>
+	<!-- 接近目标（绿） -->
+	<g stroke-width="5.5" fill="none" stroke-linecap="round" filter="url(#soft2)">
+		<path d="M1186 392 L1268 342" stroke="#22c55e" opacity="0.9" />
+		<path d="M1268 342 L1340 300" stroke="#22c55e" opacity="0.9" />
+		<path d="M1268 342 L1352 368" stroke="#22c55e" opacity="0.9" />
+		<path d="M1340 300 L1428 262" stroke="#22c55e" opacity="0.9" />
+		<path d="M1352 368 L1428 262" stroke="#22c55e" opacity="0.9" />
+		<path d="M1428 262 L1516 178" stroke="#22c55e" opacity="0.9" />
+	</g>
+	<!-- 旁支 / 死路 -->
+	<g stroke="#2b3441" stroke-width="3.5" fill="none" stroke-linecap="round">
+		<path d="M972 570 L1020 640 L1090 692" />
+		<path d="M1046 512 L1000 430 L960 362" />
+		<path d="M1340 300 L1400 360 L1452 402" />
+		<path d="M1428 262 L1540 320 L1600 352" />
+		<path d="M1516 178 L1620 240 L1666 212" />
+		<path d="M1268 342 L1180 250 L1120 208" />
+		<path d="M1116 452 L1206 448 L1252 594" />
+	</g>
+	<!-- Finding：搜索过程的结构化产物 -->
+	<path d="M1186 392 L1215 480" stroke="#d4a017" stroke-width="3" stroke-dasharray="8 7" fill="none" opacity="0.9" />
+
+	<g>
+		<use href="#cross" x="930" y="300" />
+		<use href="#cross" x="1120" y="208" />
+		<use href="#cross" x="1452" y="402" />
+		<use href="#cross" x="1600" y="352" />
+		<use href="#cross" x="1666" y="212" />
+		<use href="#cross" x="1090" y="692" />
+		<use href="#cross" x="1252" y="594" />
+	</g>
+
+	<!-- 节点 -->
+	<g color="#38bdf8">
+		<use href="#node" x="820" y="688" />
+		<use href="#node" x="898" y="628" />
+		<use href="#node" x="972" y="570" />
+	</g>
+	<g color="#8b7cf6">
+		<use href="#node" x="1046" y="512" />
+		<use href="#node" x="1116" y="452" />
+		<use href="#node" x="1186" y="392" />
+	</g>
+	<g color="#22c55e">
+		<use href="#node" x="1268" y="342" />
+		<use href="#node" x="1340" y="300" />
+		<use href="#node" x="1352" y="368" />
+		<use href="#node" x="1428" y="262" />
+	</g>
+	<g fill="#10161f" stroke="#39424f" stroke-width="3">
+		<circle cx="1020" cy="640" r="9" />
+		<circle cx="1000" cy="430" r="9" />
+		<circle cx="1400" cy="360" r="9" />
+		<circle cx="1540" cy="320" r="9" />
+		<circle cx="1620" cy="240" r="9" />
+		<circle cx="1180" cy="250" r="9" />
+		<circle cx="1206" cy="448" r="9" />
+		<circle cx="1294" cy="742" r="9" />
+	</g>
+	<use href="#hintNode" x="1140" y="618" />
+	<use href="#hintNode" x="1345" y="196" />
+	<!-- Finding 菱形 -->
+	<g transform="translate(1215 480)">
+		<rect x="-14" y="-14" width="28" height="28" transform="rotate(45)" filter="url(#soft)" fill="#d4a017" opacity="0.7" />
+		<rect x="-12" y="-12" width="24" height="24" transform="rotate(45)" fill="#0a0f16" />
+		<rect x="-10" y="-10" width="20" height="20" transform="rotate(45)" fill="#d4a017" />
+	</g>
+
+	<!-- 起点与目标 -->
+	<circle cx="820" cy="688" r="74" fill="url(#originHalo)" />
+	<g stroke="#38bdf8" fill="none" opacity="0.35">
+		<circle cx="820" cy="688" r="40" stroke-width="1.5" />
+		<circle cx="820" cy="688" r="56" stroke-width="1.2" opacity="0.6" />
+	</g>
+	<circle cx="1516" cy="178" r="104" fill="url(#goalHalo)" />
+	<g fill="none">
+		<circle cx="1516" cy="178" r="62" stroke="#22c55e" stroke-width="1.6" opacity="0.34" />
+		<circle cx="1516" cy="178" r="86" stroke="#22c55e" stroke-width="1.4" opacity="0.22" />
+		<circle cx="1516" cy="178" r="112" stroke="#22c55e" stroke-width="1.2" opacity="0.12" />
+	</g>
+	<g color="#22c55e">
+		<circle cx="1516" cy="178" r="40" filter="url(#soft)" fill="#22c55e" opacity="0.75" />
+		<circle cx="1516" cy="178" r="34" fill="#0a0f16" />
+		<circle cx="1516" cy="178" r="28" fill="#22c55e" />
+		<circle cx="1516" cy="178" r="11" fill="#ffffff" opacity="0.9" />
+	</g>
+
+	<!-- 图上标签 -->
+	<g font-size="26" font-weight="600" letter-spacing="1.5">
+		<text x="828" y="784" fill="#38bdf8">ORIGIN</text>
+		<text x="1580" y="176" fill="#22c55e">GOAL</text>
+	</g>
+	<g font-size="20" fill="#64748b">
+		<text x="828" y="812">The starting point.</text>
+		<text x="1580" y="206">The objective.</text>
+		<text x="1580" y="232">The destination.</text>
+	</g>
+	<text x="1256" y="488" fill="#d4a017" font-size="22" font-weight="600" letter-spacing="1.5">FINDING</text>
+
+	<!-- ================= 左侧标识区 ================= -->
+	<text x="84" y="268" fill="#f2f6f9" font-size="168" font-weight="700" letter-spacing="8">CAIRN</text>
+
+	<text x="84" y="364" fill="#dfe8f2" font-size="38">AI Autonomous Pentesting Agent</text>
+	<text x="84" y="416" fill="url(#sub2)" font-size="38">General Problem Solving Engine</text>
+
+	<line x1="84" y1="466" x2="176" y2="466" stroke="#2dd4bf" stroke-width="3" />
+
+	<!-- 图例：2 × 2 -->
+	<g>
+		<circle cx="96" cy="546" r="11" fill="#38bdf8" opacity="0.22" filter="url(#soft2)" />
+		<circle cx="96" cy="546" r="10" fill="#38bdf8" />
+		<circle cx="96" cy="546" r="4" fill="#ffffff" opacity="0.85" />
+		<text x="130" y="554" fill="#38bdf8" font-size="24" font-weight="600" letter-spacing="2">FACT</text>
+		<text x="130" y="586" fill="#6b7c93" font-size="19">The known.</text>
+		<text x="130" y="612" fill="#6b7c93" font-size="19">Observed truth.</text>
+	</g>
+	<g>
+		<circle cx="482" cy="546" r="11" fill="#8b7cf6" opacity="0.22" filter="url(#soft2)" />
+		<circle cx="482" cy="546" r="10" fill="#8b7cf6" />
+		<circle cx="482" cy="546" r="4" fill="#ffffff" opacity="0.85" />
+		<text x="516" y="554" fill="#8b7cf6" font-size="24" font-weight="600" letter-spacing="2">STEP</text>
+		<text x="516" y="586" fill="#6b7c93" font-size="19">The next move.</text>
+		<text x="516" y="612" fill="#6b7c93" font-size="19">Action that evolves state.</text>
+	</g>
+	<g>
+		<circle cx="96" cy="686" r="10" fill="none" stroke="#f59e0b" stroke-width="3" />
+		<circle cx="96" cy="686" r="3.5" fill="#f59e0b" />
+		<text x="130" y="694" fill="#f59e0b" font-size="24" font-weight="600" letter-spacing="2">HINT</text>
+		<text x="130" y="726" fill="#6b7c93" font-size="19">The possibility.</text>
+		<text x="130" y="752" fill="#6b7c93" font-size="19">Heuristic guidance.</text>
+	</g>
+	<g>
+		<rect x="472" y="676" width="20" height="20" transform="rotate(45 482 686)" fill="#d4a017" />
+		<text x="516" y="694" fill="#d4a017" font-size="24" font-weight="600" letter-spacing="2">FINDING</text>
+		<text x="516" y="726" fill="#6b7c93" font-size="19">The artifact.</text>
+		<text x="516" y="752" fill="#6b7c93" font-size="19">Structured result.</text>
+	</g>
+
+	<text x="84" y="836" fill="url(#tagline)" font-size="18" font-weight="500" letter-spacing="6" font-family="Menlo, monospace">EXPLORE. REASON. EMERGE. SOLVE.</text>
+</svg>

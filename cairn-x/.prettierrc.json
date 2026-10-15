@@ -1,0 +1,12 @@
+{
+  "useTabs": true,
+  "printWidth": 100,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": ["*.json", "*.jsonc"],
+      "options": { "useTabs": false, "tabWidth": 2 }
+    }
+  ]
+}

@@ -1,0 +1,958 @@
+.cfg-backdrop,
+.cfg-overlay {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--text);
+	max-width: calc(100% - 16px);
+	max-height: calc(100dvh - 16px);
+	overflow: visible;
+}
+.cfg-backdrop::backdrop,
+.cfg-overlay::backdrop {
+	background: #0006;
+}
+.cfg-window {
+	--cfg-bg: #fff;
+	--cfg-panel: #f5f5f5;
+	--cfg-line: #e0e0e0;
+	--cfg-text: #1a1a1a;
+	--cfg-muted: #6b7280;
+	--cfg-selected: #e8e8e8;
+	--cfg-accent: #2563eb;
+	color: var(--cfg-text);
+	background: var(--cfg-bg);
+	width: 1080px;
+	max-width: 100%;
+	height: 84dvh;
+	max-height: calc(100dvh - 16px);
+	border: 1px solid var(--cfg-line);
+	border-radius: 8px;
+	box-shadow: 0 16px 48px #0004;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	font-size: 13px;
+	overflow: hidden;
+}
+[data-theme="dark"] .cfg-window,
+html.dark .cfg-window {
+	--cfg-bg: #1a1a1a;
+	--cfg-panel: #242424;
+	--cfg-line: #3a3a3a;
+	--cfg-text: #e8e8e8;
+	--cfg-muted: #9ca3af;
+	--cfg-selected: #383838;
+	--cfg-accent: #60a5fa;
+}
+.cfg-window * {
+	box-sizing: border-box;
+}
+.cfg-header {
+	display: flex;
+	align-items: center;
+	min-height: 50px;
+	padding: 0 18px;
+	border-bottom: 1px solid var(--cfg-line);
+	gap: 22px;
+	flex-shrink: 0;
+}
+.cfg-header strong {
+	font-size: 15px;
+}
+.cfg-header nav {
+	display: flex;
+	height: 50px;
+	gap: 2px;
+	flex: 1;
+}
+.cfg-window button {
+	font: inherit;
+	border: 1px solid var(--cfg-line);
+	border-radius: 5px;
+	padding: 6px 10px;
+	color: var(--cfg-text);
+	background: var(--cfg-bg);
+	cursor: pointer;
+	line-height: 1.5;
+	white-space: normal;
+}
+.cfg-window button:hover:not(:disabled) {
+	background: var(--cfg-selected);
+}
+.cfg-window button:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+.cfg-header nav button {
+	width: 85px;
+	border: 0;
+	border-radius: 0;
+	position: relative;
+	color: var(--cfg-muted);
+	background: transparent;
+}
+.cfg-header nav button[aria-current="page"] {
+	color: var(--cfg-text);
+	font-weight: 600;
+}
+.cfg-header nav button[aria-current="page"]:after {
+	content: "";
+	position: absolute;
+	width: 24px;
+	height: 2px;
+	background: var(--cfg-accent);
+	bottom: 0;
+	left: calc(50% - 12px);
+}
+.cfg-header .cfg-close {
+	border: 0;
+	background: none;
+	font-size: 22px;
+	padding: 2px 8px;
+}
+.cfg-body {
+	display: flex;
+	flex: 1;
+	min-height: 0;
+}
+.cfg-sidebar {
+	width: 240px;
+	flex-shrink: 0;
+	background: var(--cfg-panel);
+	border-right: 1px solid var(--cfg-line);
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+.cfg-list {
+	padding: 8px;
+	overflow: auto;
+	flex: 1;
+}
+.cfg-list button {
+	display: block;
+	width: 100%;
+	text-align: left;
+	border: 0;
+	background: none;
+	padding: 7px 8px;
+	font-size: 12px;
+	overflow-wrap: anywhere;
+	margin-bottom: 2px;
+}
+.cfg-list button[aria-current="page"] {
+	background: var(--cfg-selected);
+	font-weight: 600;
+}
+.cfg-window small {
+	font-size: 12px;
+	line-height: 1.6;
+	color: var(--cfg-muted);
+}
+.cfg-list small {
+	display: block;
+	font-weight: 400;
+	font-size: 11px;
+}
+.cfg-dot {
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	background: var(--cfg-accent);
+	border-radius: 50%;
+	margin-right: 8px;
+}
+.cfg-sidebar .cfg-add {
+	border: 0;
+	border-top: 1px solid var(--cfg-line);
+	border-radius: 0;
+	text-align: left;
+	padding: 12px 16px;
+	color: var(--cfg-muted);
+	background: none;
+}
+.cfg-content {
+	flex: 1;
+	min-width: 0;
+	overflow: auto;
+	padding: 20px;
+}
+.cfg-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.cfg-window h2 {
+	font-size: 16px;
+	margin: 0;
+	font-weight: 600;
+}
+.cfg-window h3 {
+	font-size: 13px;
+	margin: 0 0 10px;
+	font-weight: 600;
+}
+.cfg-detail-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.cfg-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+}
+.cfg-field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	font-size: 12px;
+	color: var(--cfg-muted);
+	min-width: 0;
+}
+.cfg-window input:not([type="checkbox"]),
+.cfg-window select,
+.cfg-window textarea {
+	display: block;
+	width: 100%;
+	min-width: 0;
+	background: var(--cfg-panel);
+	border: 1px solid var(--cfg-line);
+	border-radius: 5px;
+	color: var(--cfg-text);
+	padding: 7px 9px;
+	font: inherit;
+	line-height: 1.5;
+}
+.cfg-window input:focus-visible,
+.cfg-window textarea:focus-visible,
+.cfg-window select:focus-visible,
+.cfg-window button:focus-visible {
+	outline: 2px solid var(--cfg-accent);
+	outline-offset: 2px;
+}
+.cfg-window .cfg-prompt {
+	height: 225px;
+	resize: vertical;
+	font:
+		12px/1.6 ui-monospace,
+		monospace;
+}
+.cfg-toggle {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	color: var(--cfg-muted);
+	font-size: 12px;
+}
+.cfg-toggle input {
+	width: 14px;
+	height: 14px;
+	accent-color: var(--cfg-accent);
+	margin: 0;
+}
+.cfg-inline {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+.cfg-inline > select,
+.cfg-inline > input {
+	flex: 1;
+	min-width: 120px;
+}
+.cfg-section {
+	border-top: 1px solid var(--cfg-line);
+	padding-top: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.cfg-window pre {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	font:
+		12px/1.65 ui-monospace,
+		monospace;
+	background: var(--cfg-panel);
+	padding: 12px;
+	border-radius: 5px;
+	max-height: 350px;
+	overflow: auto;
+}
+.cfg-empty {
+	display: flex;
+	min-height: 260px;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	color: var(--cfg-muted);
+}
+.cfg-footer {
+	padding: 10px 14px;
+	min-height: 52px;
+	border-top: 1px solid var(--cfg-line);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	flex-shrink: 0;
+	font-size: 12px;
+}
+.cfg-footer > div:first-child {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.cfg-window .cfg-primary {
+	background: #2563eb;
+	color: white;
+	border-color: #2563eb;
+	min-width: 96px;
+}
+.cfg-window .cfg-primary:hover:not(:disabled) {
+	background: #1d4ed8;
+}
+.cfg-error {
+	color: #dc2626;
+}
+.cfg-notice {
+	color: var(--cfg-accent);
+}
+.cfg-overlay {
+	max-width: calc(100% - 48px);
+	max-height: calc(84dvh - 32px);
+}
+.cfg-overlay > div {
+	background: var(--cfg-bg);
+	border: 1px solid var(--cfg-line);
+	border-radius: 8px;
+	padding: 20px;
+	max-width: 100%;
+	max-height: calc(84dvh - 32px);
+	overflow: auto;
+}
+.cfg-overlay .cfg-catalog {
+	width: 820px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.cfg-catalog-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+.cfg-catalog-grid button {
+	text-align: left;
+	padding: 12px;
+}
+.cfg-catalog-grid small {
+	display: block;
+}
+.cfg-login {
+	padding: 12px;
+	border: 1px solid var(--cfg-line);
+	border-radius: 5px;
+}
+.cfg-login a {
+	color: var(--cfg-accent);
+	overflow-wrap: anywhere;
+}
+.cfg-header .cfg-mobile-picker {
+	display: none;
+}
+.cfg-window details summary {
+	cursor: pointer;
+	color: var(--cfg-muted);
+	margin-bottom: 10px;
+}
+@media (max-width: 700px) {
+	.cfg-window {
+		height: calc(100dvh - 16px);
+	}
+	.cfg-header {
+		gap: 12px;
+	}
+	.cfg-header nav {
+		display: none;
+	}
+	.cfg-header .cfg-mobile-picker {
+		display: block;
+		flex: 1;
+		width: auto;
+	}
+	.cfg-sidebar {
+		width: 160px;
+	}
+	.cfg-content {
+		padding: 14px;
+	}
+	.cfg-grid {
+		grid-template-columns: 1fr;
+	}
+	.cfg-catalog-grid {
+		grid-template-columns: 1fr 1fr;
+	}
+	.cfg-window input:not([type="checkbox"]),
+	.cfg-window select,
+	.cfg-window textarea {
+		font-size: 16px;
+	}
+	.cfg-window .cfg-prompt {
+		font-size: 16px;
+	}
+	.cfg-footer {
+		flex-wrap: wrap;
+	}
+	.cfg-footer > .cfg-inline {
+		margin-left: auto;
+	}
+}
+@media (max-width: 460px) {
+	.cfg-body {
+		flex-direction: column;
+	}
+	.cfg-sidebar {
+		width: 100%;
+		max-height: 145px;
+		border-right: 0;
+		border-bottom: 1px solid var(--cfg-line);
+	}
+	.cfg-list {
+		display: flex;
+		gap: 4px;
+		padding: 6px;
+		flex-wrap: wrap;
+	}
+	.cfg-list button {
+		width: auto;
+		max-width: 100%;
+		flex: 1;
+		min-width: 120px;
+	}
+	.cfg-sidebar .cfg-add {
+		padding: 6px 12px;
+	}
+	.cfg-catalog-grid {
+		grid-template-columns: 1fr;
+	}
+	.cfg-prompt {
+		min-height: 200px;
+	}
+}
+.cfg-danger {
+	color: #b4453c;
+	border-color: color-mix(in srgb, #b4453c 40%, var(--line));
+}
+.cfg-danger:hover {
+	background: color-mix(in srgb, #b4453c 10%, var(--panel));
+}
+
+.cfg-window {
+	--cfg-bg: var(--panel);
+	--cfg-panel: var(--side);
+	--cfg-line: var(--line);
+	--cfg-text: var(--text);
+	--cfg-muted: var(--muted);
+	--cfg-selected: var(--hover);
+	--cfg-accent: var(--accent);
+	border-radius: 8px;
+}
+html.dark .cfg-window,
+[data-theme="dark"] .cfg-window {
+	--cfg-bg: var(--panel);
+	--cfg-panel: var(--side);
+	--cfg-line: var(--line);
+	--cfg-text: var(--text);
+	--cfg-muted: var(--muted);
+	--cfg-selected: var(--hover);
+	--cfg-accent: var(--accent);
+}
+.cfg-window .cfg-primary {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: var(--accent-text);
+}
+.cfg-window .cfg-primary:hover:not(:disabled) {
+	background: var(--accent);
+	filter: brightness(0.92);
+}
+
+.cfg-thinking-map {
+	grid-column: 1 / -1;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	border-top: 1px solid var(--cfg-line);
+	padding-top: 14px;
+	min-width: 0;
+}
+.cfg-thinking-map h3 {
+	margin: 0;
+}
+.cfg-thinking-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 4px;
+	min-width: 0;
+}
+.cfg-thinking-label {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	width: 68px;
+	flex-shrink: 0;
+	color: var(--cfg-muted);
+	font-size: 11px;
+}
+.cfg-thinking-label i {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+.cfg-thinking-row[data-mode="disabled"] .cfg-thinking-label code {
+	text-decoration: line-through;
+}
+.cfg-thinking-row[data-mode="disabled"] .cfg-thinking-label i {
+	opacity: 0.3;
+}
+.cfg-thinking-segments,
+.cfg-thinking-custom {
+	display: flex;
+	border: 1px solid var(--cfg-line);
+	border-radius: 5px;
+	overflow: hidden;
+	min-width: 0;
+}
+.cfg-thinking-segments {
+	flex-shrink: 0;
+}
+.cfg-thinking-row button {
+	border: 0;
+	border-radius: 0;
+	background: var(--cfg-panel);
+	color: var(--cfg-muted);
+	padding: 4px 10px;
+	font-size: 11px;
+	white-space: nowrap;
+}
+.cfg-thinking-segments button + button,
+.cfg-thinking-custom input {
+	border-left: 1px solid var(--cfg-line);
+}
+.cfg-thinking-row button[aria-pressed="true"],
+.cfg-thinking-row button[aria-pressed="true"]:hover {
+	background: var(--cfg-accent);
+	color: var(--accent-text);
+	font-weight: 600;
+}
+.cfg-thinking-row .cfg-thinking-disabled[aria-pressed="true"],
+.cfg-thinking-row .cfg-thinking-disabled[aria-pressed="true"]:hover {
+	background: #dc2626;
+	color: #fff;
+}
+.cfg-thinking-custom[data-active="true"] {
+	border-color: var(--cfg-accent);
+}
+.cfg-window .cfg-thinking-custom input {
+	width: 12ch;
+	border: 0;
+	border-left: 1px solid var(--cfg-line);
+	border-radius: 0;
+	padding: 4px 7px;
+	font:
+		11px/1.5 ui-monospace,
+		monospace;
+}
+.cfg-thinking-row :focus-visible {
+	outline-offset: -2px !important;
+}
+@media (max-width: 850px) {
+	.cfg-thinking-row {
+		flex-wrap: wrap;
+	}
+	.cfg-thinking-custom {
+		margin-left: 76px;
+	}
+}
+@media (max-width: 700px) {
+	.cfg-window .cfg-thinking-custom input {
+		font-size: 16px;
+	}
+}
+
+/* 详情列按可读宽度收敛，避免表单横跨整个弹窗。 */
+.cfg-window {
+	width: 1000px;
+}
+.cfg-sidebar {
+	width: 220px;
+}
+@media (max-width: 700px) {
+	.cfg-sidebar {
+		width: 160px;
+	}
+}
+@media (max-width: 460px) {
+	.cfg-sidebar {
+		width: 100%;
+	}
+}
+.cfg-content > * {
+	max-width: 720px;
+}
+
+/* 分区图标、分组标题与只读字段：对齐 pi-web 的设置面板排版。 */
+.cfg-header nav button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+.cfg-header nav button svg {
+	flex-shrink: 0;
+}
+.cfg-group {
+	margin: 10px 8px 4px;
+	font-size: 10px;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
+	color: var(--cfg-muted);
+}
+.cfg-list .cfg-group:first-child {
+	margin-top: 2px;
+}
+.cfg-chips {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	min-width: 0;
+}
+.cfg-detail-title {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+.cfg-chip {
+	display: inline-flex;
+	align-items: center;
+	padding: 3px 8px;
+	border-radius: 999px;
+	border: 1px solid var(--cfg-line);
+	background: var(--cfg-panel);
+	color: var(--cfg-muted);
+	font-size: 11px;
+	max-width: 100%;
+	overflow-wrap: anywhere;
+}
+.cfg-eyebrow {
+	font-size: 10px;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
+	color: var(--cfg-muted);
+}
+.cfg-eyebrow-block {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+.cfg-readonly,
+.cfg-kv > div {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+.cfg-readonly > span,
+.cfg-kv > div > span {
+	font-size: 11px;
+	color: var(--cfg-muted);
+}
+.cfg-readonly > p,
+.cfg-kv > div > p {
+	margin: 0;
+	font-size: 13px;
+	overflow-wrap: anywhere;
+}
+.cfg-kv {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.cfg-statusbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-top: 4px;
+	padding-top: 12px;
+	border-top: 1px solid var(--cfg-line);
+	font-size: 11px;
+	color: var(--cfg-muted);
+}
+.cfg-provider-fallback {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--cfg-line);
+	border-radius: 4px;
+	color: var(--cfg-muted);
+	font-size: 9px;
+	line-height: 1;
+	flex-shrink: 0;
+}
+
+/* 常规页：外观网格 + 对话滑块。 */
+.cfg-general {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+.cfg-general-section {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.cfg-general-section > h3 {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 650;
+}
+.cfg-theme-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 3px;
+	padding: 3px;
+	max-width: 420px;
+	border: 1px solid var(--cfg-line);
+	border-radius: 7px;
+}
+.cfg-theme-grid button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 44px;
+	border: 0;
+	border-radius: 5px;
+	background: transparent;
+	color: var(--cfg-muted);
+	font-size: 12px;
+}
+.cfg-theme-grid button[aria-checked="true"] {
+	background: var(--cfg-selected);
+	color: var(--cfg-accent);
+	font-weight: 600;
+}
+/* 与 pi-web 的 settings-chat-range-* 一致：标题行三列，滑块撑满内容列。
+   选择器带 .cfg-window 前缀，才能压过 .cfg-window button / input 的基础样式。 */
+.cfg-window .cfg-slider {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.cfg-window .cfg-slider-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto 28px;
+	align-items: center;
+	gap: 8px;
+	min-height: 28px;
+}
+.cfg-window .cfg-slider-header label {
+	font-size: 12px;
+}
+.cfg-window .cfg-slider-header output {
+	color: var(--cfg-muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+.cfg-window .cfg-slider-reset {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: var(--cfg-muted);
+}
+.cfg-window .cfg-slider-reset:hover:not(:disabled) {
+	background: var(--cfg-selected);
+	color: var(--cfg-text);
+}
+.cfg-window .cfg-slider-reset:disabled {
+	opacity: 0.35;
+}
+/* 滑块不是文本框：清掉输入框的边框与内边距，轨道才与上面的数值、重置按钮对齐。 */
+.cfg-window .cfg-slider input[type="range"] {
+	display: block;
+	width: 100%;
+	height: 20px;
+	margin: 2px 0 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	accent-color: var(--cfg-accent);
+}
+
+/* 模型侧栏：供应商行 + 模型行。 */
+.cfg-provider {
+	margin-bottom: 2px;
+}
+.cfg-provider-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.cfg-provider-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.cfg-provider-row small {
+	flex-shrink: 0;
+}
+.cfg-model-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 8px 5px 30px;
+	font-size: 11px;
+	color: var(--cfg-muted);
+}
+.cfg-model-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.cfg-model-tag {
+	flex-shrink: 0;
+	padding: 0 5px;
+	border-radius: 4px;
+	border: 1px solid var(--cfg-line);
+	color: var(--cfg-muted);
+	font-size: 10px;
+}
+.cfg-package-row {
+	display: block;
+	padding: 4px 8px 4px 30px;
+	font-size: 11px;
+	color: var(--cfg-muted);
+	overflow-wrap: anywhere;
+}
+
+/* 添加供应商：搜索 + 卡片网格。 */
+.cfg-catalog-search {
+	flex: 1;
+	min-width: 0;
+}
+.cfg-catalog-group {
+	margin: 6px 0 0;
+	font-size: 10px;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
+	color: var(--cfg-muted);
+}
+.cfg-custom-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	text-align: left;
+	padding: 12px;
+}
+.cfg-catalog-plus {
+	color: var(--cfg-muted);
+	flex-shrink: 0;
+}
+.cfg-catalog-grid button {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+.cfg-catalog-text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.cfg-catalog-name {
+	font-size: 12px;
+	overflow-wrap: anywhere;
+}
+
+/* 技能页：只读清单 + 详情。 */
+.cfg-skill-list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.cfg-skill-list button {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	border: 0;
+	background: transparent;
+	text-align: left;
+	width: 100%;
+	padding: 7px 8px;
+}
+.cfg-skill-list button[aria-current="page"] {
+	background: var(--cfg-selected);
+	font-weight: 600;
+}
+.cfg-skill-detail {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.cfg-window .cfg-input-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.cfg-window .cfg-input-row > input {
+	flex: 1;
+	width: auto;
+	min-width: 0;
+}
+.cfg-window .cfg-icon-button {
+	flex-shrink: 0;
+	font-size: 11px;
+	padding: 6px 8px;
+}
+.plugin-progress {
+	width: 100%;
+	height: 4px;
+	margin-top: 8px;
+	appearance: none;
+	border: 0;
+	border-radius: 999px;
+	overflow: hidden;
+	background: var(--cfg-selected);
+}
+.plugin-progress::-webkit-progress-bar {
+	background: var(--cfg-selected);
+}
+.plugin-progress::-webkit-progress-value {
+	background: var(--cfg-accent);
+}
+.plugin-progress::-moz-progress-bar {
+	background: var(--cfg-accent);
+}

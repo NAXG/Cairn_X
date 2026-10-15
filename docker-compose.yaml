@@ -1,0 +1,137 @@
+services:
+  cairn-x-server:
+    build:
+      context: .
+      dockerfile: cairn-x/Dockerfile
+      target: server
+    image: cairn-x-server
+    container_name: cairn-x-server
+    ports:
+      # 宿主映射端口可配置（.env 里设 CAIRN_HTTP_PORT），避免与宿主已有服务冲突。
+      - "${CAIRN_HTTP_PORT:-8000}:8000"
+    environment:
+      # web 控制台登录凭据；机器端（dispatcher）用 CAIRN_API_TOKEN 走 Bearer。
+      # 必须在 .env 文件里设置独立的随机密码和 token；不提供默认凭据。
+      CAIRN_WEB_USER: "admin"
+      CAIRN_WEB_PASSWORD: "${CAIRN_WEB_PASSWORD:?Set CAIRN_WEB_PASSWORD in .env to a strong unique password}"
+      CAIRN_API_TOKEN: "${CAIRN_API_TOKEN:?Set CAIRN_API_TOKEN in .env to a strong unique token}"
+      # 会话轨迹、数据库和项目附件统一落在挂载卷 /data
+      CAIRN_DATA_ROOT: /data
+      # 日志级别：debug | info | warn | error（默认 info）
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      # Worker 访问控制面的地址（cairn-workers 网络内的本服务别名 + 端口）
+      CAIRN_WORKER_CONTROL_URL: http://cairn-x-server:8000
+      # dispatch.yaml 里 api_key: "env:DECIDE_API_KEY" / "env:EXECUTE_API_KEY"
+      # 在 serve 进程内解析，必须经此处透传进容器；长期 key 只留在控制端。
+      DECIDE_API_KEY: "${DECIDE_API_KEY:-}"
+      EXECUTE_API_KEY: "${EXECUTE_API_KEY:-}"
+      # TSecBench：平台 token 只注入 serve（Worker 经执行协议代理），
+      # 在 .env 里设置 BENCHMARK_TOKEN 即可启用评测集成。
+      BENCHMARK_TOKEN: "${BENCHMARK_TOKEN:-}"
+      BENCHMARK_BASE_URL: "${BENCHMARK_BASE_URL:-https://tsecbench.zc.tencent.com}"
+    volumes:
+      - "${CAIRN_DATA_HOST_ROOT:?Set CAIRN_DATA_HOST_ROOT to an absolute host path}:/data/"
+      - ./cairn-x/dispatch.yaml:/app/dispatch.yaml:ro
+    healthcheck:
+      # /healthz 是免鉴权探针（数据库可读即 200）；不要用需要认证的 /projects。
+      test:
+        - "CMD"
+        - "wget"
+        - "-qO-"
+        - "http://127.0.0.1:8000/healthz"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 3s
+    restart: unless-stopped
+    command: ["npx", "tsx", "src/cli.ts", "serve", "--host", "0.0.0.0", "--db-path", "/data/cairn.db"]
+
+  cairn-x-dispatcher:
+    build:
+      context: .
+      dockerfile: cairn-x/Dockerfile
+      target: dispatcher
+    image: cairn-x-dispatcher
+    container_name: cairn-x-dispatcher
+    environment:
+      # 与 server 的 CAIRN_API_TOKEN 保持一致，否则所有请求都会 401
+      CAIRN_API_TOKEN: "${CAIRN_API_TOKEN:?Set CAIRN_API_TOKEN in .env to a strong unique token}"
+      CAIRN_DATA_ROOT: /data
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      CAIRN_DATA_HOST_ROOT: "${CAIRN_DATA_HOST_ROOT:?Set CAIRN_DATA_HOST_ROOT to an absolute host path}"
+    volumes:
+      # dispatcher 用 docker.sock 启动/停止/回收 Worker 容器；
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./cairn-x/dispatch.yaml:/app/dispatch.yaml:ro
+      - "${CAIRN_DATA_HOST_ROOT:?Set CAIRN_DATA_HOST_ROOT to an absolute host path}:/data/"
+    depends_on:
+      cairn-x-server:
+        condition: service_healthy
+    restart: unless-stopped
+    command:
+      [
+        "npx",
+        "tsx",
+        "src/cli.ts",
+        "dispatch",
+        "--config",
+        "dispatch.yaml",
+        "--data-root",
+        "/data",
+        "--data-host-root",
+        "${CAIRN_DATA_HOST_ROOT:?Set CAIRN_DATA_HOST_ROOT to an absolute host path}",
+      ]
+
+  # TSecBench 评测编排：后台常驻 driver，负责拉题、给每题建项目、绑定靶场、
+  # 通关/超时后释放容器。不在默认 `compose up` 中启动，需要时显式开启：
+  #   docker compose --profile eval up -d cairn-x-benchmark
+  # 平台 token 同时注入 serve 与本服务；Worker 容器永远拿不到。
+  cairn-x-benchmark:
+    profiles: ["eval"]
+    image: cairn-x-server
+    container_name: cairn-x-benchmark
+    environment:
+      CAIRN_API_TOKEN: "${CAIRN_API_TOKEN:?Set CAIRN_API_TOKEN in .env to a strong unique token}"
+      BENCHMARK_TOKEN: "${BENCHMARK_TOKEN:-}"
+      BENCHMARK_BASE_URL: "${BENCHMARK_BASE_URL:-https://tsecbench.zc.tencent.com}"
+    volumes:
+      - ./cairn-x/dispatch.yaml:/app/dispatch.yaml:ro
+    depends_on:
+      cairn-x-server:
+        condition: service_healthy
+    restart: unless-stopped
+    command:
+      [
+        "npx",
+        "tsx",
+        "src/cli.ts",
+        "benchmark",
+        "--config",
+        "dispatch.yaml",
+        "--interval",
+        "30",
+      ]
+
+  # Worker 沙箱镜像：只构建、不常驻（profiles 隔离，`compose up` 不会启动它）。
+  # 必须先构建：docker compose --profile build build（直接 `up --build`
+  # 不会包含此 profile 服务）。dispatcher 以此镜像启动执行容器。
+  cairn-x-worker-image:
+    profiles: ["build"]
+    build:
+      context: .
+      dockerfile: cairn-x/Dockerfile.cairn-x
+    image: cairn-x-worker:latest
+
+# Worker 容器网络：dispatcher 以 `docker run --network cairn-workers` 启动，
+# Worker 通过 http://cairn-x-server:8000 访问控制面（执行协议 + 模型代理）。
+# 网络本身只提供连通性；真正的边界是执行令牌鉴权 + 容器资源限制 + 无 socket。
+networks:
+  default:
+    name: cairn-workers
+    external: false
+    # 钉死子网，别用 Docker 默认地址池（172.17–172.31）：靶场内网大面积落在
+    # 这段上（b-01 内部 = 172.18.0.0/16、b-02 内部 = 172.19.0.0/16），worker
+    # 会把自己的兄弟容器 / 宿主网关误认成靶场内部主机（已实际发生并写成事实）。
+    ipam:
+      config:
+        - subnet: 10.88.0.0/16
