@@ -1,23 +1,8 @@
-<div align="center">
-
-<img src="./README/banner.png" alt="Cairn_X Banner"/>
-
 # Cairn_X
 
 ### FGS 图驱动的通用问题求解引擎
 
-<p>
-  <a href="https://zc.tencent.com/hackathon" target="_blank" rel="noopener noreferrer">
-    <img src="./README/tencent.png" alt="Tencent" height="55" />
-  </a>
-  <a href="https://zc.tencent.com/hackathon" target="_blank" rel="noopener noreferrer">
-    <img src="./README/tch.png" alt="TCH" height="55" />
-  </a>
-</p>
 
-Cairn_X 无角色、无工作流：给定起点与目标，在未知状态空间中搜索路径。
-
-</div>
 
 ## 架构
 
